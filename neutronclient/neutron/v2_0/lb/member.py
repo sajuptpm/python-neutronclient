@@ -23,7 +23,7 @@ class ListMember(neutronV20.ListCommand):
 
     resource = 'member'
     list_columns = [
-        'id', 'address', 'protocol_port', 'weight', 'admin_state_up', 'status'
+        'id', 'address', 'protocol_port', 'weight', 'admin_state_up', 'backup', 'status'
     ]
     pagination_support = True
     sorting_support = True
@@ -61,6 +61,11 @@ class CreateMember(neutronV20.CreateCommand):
         parser.add_argument(
             'pool_id', metavar='POOL',
             help=_('ID or name of the pool this vip belongs to.'))
+        parser.add_argument(
+            '--backup',
+            dest='backup', action='store_true',
+            help=_('Set backup member'))
+
 
     def args2body(self, parsed_args):
         _pool_id = neutronV20.find_resourceid_by_name_or_id(
@@ -70,7 +75,7 @@ class CreateMember(neutronV20.CreateCommand):
         neutronV20.update_dict(
             parsed_args,
             body,
-            ['address', 'protocol_port', 'weight', 'tenant_id']
+            ['address', 'protocol_port', 'weight', 'tenant_id', 'backup']
         )
         return {self.resource: body}
 
